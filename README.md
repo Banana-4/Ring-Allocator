@@ -39,3 +39,26 @@ If no suitable size is found a request for a memory block is made to the OS and 
 A memory block is freed by giving it back to the allocator. The memory block is reattached to the list so that it does not breaks the sorted order.
 If the address of the memory block is adjacent to the previous or next block in the list it is merged with them to reduce fragmentation.
 
+#### File organization:
+``` te
+
+ring-allocator/
+│
+├── include/
+│   └── ring_alloc.h
+│
+├── src/
+│   ├── ring_alloc.c
+│   ├── morecore.c
+│   └── internal.h
+│
+├── tests/
+│   ├── test_basic.c
+│   ├── test_fragmentation.c
+│   └── test_stress.c
+│
+├── examples/
+│   └── demo.c
+│
+├── Makefile
+└── README.md
