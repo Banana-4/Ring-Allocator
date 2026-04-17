@@ -19,15 +19,16 @@ The allocator is just a toy project, it handles no multithreading or security:
 ### Overview
 
 #### Invariant:
- The linked list is always in ascending sorted order based on the memory address it holds.
+The free memory blocks in the linked list are always in sorted order based on the memory address.
 
+#### Data Structure:
 The allocator is built around the concept of free memory blocks. 
-Internally it is a ring data structure built from linked lists.
-The nodes of the list represent free memory blocks and have the following members:
-  1. The pointer to the next node.
-  2. The size of the memory block.
-  3. The pointer to the free memory.
-The tail node points to the head and creates a full cycle linked list.
+Internally it is a ring data structure built from a linked list.
+The nodes of the list are free memory blocks that are built from header data and free memory. The header is a union placed at the start of a 
+free memory block and is just metadata that contains:
+  1. The metadata struct, that has a pointer to the next free memory block and the size of the memory block.
+  2. A member variable x of type ALIGN that represents the most restrictive type of the machine. 
+The tail node points to the head and creates a cyclic linked list.
 
 #### Allocation:
 Allocation of memory of size n is done by linear searching for a free block that has the size >= n.
@@ -38,6 +39,7 @@ If no suitable size is found a request for a memory block is made to the OS and 
 #### Freeing:
 A memory block is freed by giving it back to the allocator. The memory block is reattached to the list so that it does not breaks the sorted order.
 If the address of the memory block is adjacent to the previous or next block in the list it is merged with them to reduce fragmentation.
+
 
 #### File organization:
 ``` te
