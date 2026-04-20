@@ -1,3 +1,4 @@
+#pragma once
 #include <stdlib.h>
 
 typedef int ALIGN;
@@ -10,5 +11,5 @@ typedef union Header {
   ALIGN x;
 } Header;
 
-void *alloc(size_t n);
-void free(void *ptr);
+void *ring_alloc(size_t n);
+void ring_free(void *ptr);
