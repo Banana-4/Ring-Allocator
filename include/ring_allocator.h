@@ -12,4 +12,4 @@ typedef union Header {
 } Header;
 
 void *ring_alloc(size_t n);
-void ring_free(void *ptr);
+void ring_free(Header *ptr);
