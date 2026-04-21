@@ -17,7 +17,7 @@ void *ring_alloc(size_t n) {
         p->metadata.next = q->metadata.next;
       } else {
         q->metadata.size -= n;
-        q += q->metadata.size;
+        q = (Header *)((char *)q + q->metadata.size);
         q->metadata.next = NULL;
         q->metadata.size = n;
       }
@@ -42,20 +42,21 @@ void ring_free(Header *ptr) {
   Header *q, *p;
   for (p = last, q = last->metadata.next;;
        p = p->metadata.next, q = q->metadata.next) {
-    if (p < ptr && q > ptr) {
-      if (((void *)p + p->metadata.size) == ptr) {
+    if (p <= ptr && q >= ptr) {
+      if (((char *)p + p->metadata.size) == (char *)ptr) {
         p->metadata.size += ptr->metadata.size;
         ptr = p;
       }
-      if (((void *)ptr + ptr->metadata.size) == q) {
+      if ((char *)q == (char *)ptr + ptr->metadata.size) {
         ptr->metadata.size += q->metadata.size;
         ptr->metadata.next = q->metadata.next;
-        q = ptr;
+        if (ptr != p) {
+          p->metadata.next = ptr;
+        }
       }
-      if (ptr != p) {
+
+      if (p->metadata.next != ptr && ptr != p) {
         p->metadata.next = ptr;
-      }
-      if (q != ptr) {
         ptr->metadata.next = q;
       }
       break;
