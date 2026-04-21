@@ -1,8 +1,11 @@
 #include "../include/ring_allocator.h"
 #include "../include/internal.h"
+
 static Header *last = NULL;
+
 void *ring_alloc(size_t n) {
   Header *p, *q;
+  n += sizeof(Header);
   if (!last) {
     last = morecore(n);
   }
@@ -12,25 +15,26 @@ void *ring_alloc(size_t n) {
     if (q->metadata.size >= n) {
       if (q->metadata.size == n) {
         p->metadata.next = q->metadata.next;
-        last = p;
       } else {
-        last = (void *)(q + 1) + n;
-        last->metadata.size -= n;
-        last->metadata.next = q->metadata.next;
-        p->metadata.next = last;
+        q->metadata.size -= n;
+        q += q->metadata.size;
+        q->metadata.next = NULL;
         q->metadata.size = n;
       }
-      q->metadata.next = NULL;
       break;
     }
     if (q == last) {
-      last = morecore(n);
-      if (!last) {
+      Header *new = morecore(n);
+      if (!new) {
         return NULL;
       }
+      last = new;
       ring_free(last);
     }
   }
+  return (void *)(q + 1);
+}
+
 void ring_free(Header *ptr) {
   if (!ptr) {
     return;
@@ -57,6 +61,4 @@ void ring_free(Header *ptr) {
       break;
     }
   }
-}
-  return q + 1;
 }
