@@ -51,7 +51,7 @@ The allocator is built around the concept of free memory blocks.
 Internally it is a full cycle singly linked list.
 The nodes of the list are OS allocated free memory blocks. At the start of each memory block a header struct is inserted, that is the metadata for the memory block.
 The header is a struct that contains:
-1. the size of the memory block in bytes including the header size, the minimum size is size of header.
+1. the size of the memory block in bytes including the header size.
 2. The pointer to the next free block.
 The cycle is created by pointing the tail node to the head.
 
