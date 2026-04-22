@@ -33,7 +33,7 @@ ring-allocator/
 ├── Makefile
 └── README.md
 
-
+```
 ### Constraints:
   1. The allocator needs to limit fragmentation of memory.
   2. The complexity of allocation should be minimal.
