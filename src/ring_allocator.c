@@ -55,7 +55,7 @@ void ring_free(void *ptr) {
     Header *p = last;
 
     for (; !(block > p && block < p->next); p = p->next) {
-        if (p >= p->next && (p > block || block < p->next)) {
+        if (p >= p->next && (p > block || block > p->next)) {
             break;
         }
     }
