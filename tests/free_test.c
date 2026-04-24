@@ -5,5 +5,7 @@ int main() {
     int *j = ring_alloc(40);
     int *d = ring_alloc(sizeof(int) * 2);
     ring_free(d);
+    ring_free(i);
+    ring_free(j);
     print_debug();
 }
